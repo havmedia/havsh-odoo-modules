@@ -9,7 +9,7 @@
     'website': 'https://hav.media',
     'license': 'OPL-1',
     'depends': ['base'],
-    'auto_install': ['web'],
+    'auto_install': [],
     'data': [
         'data/ir_cron.xml',
     ],
