@@ -105,6 +105,7 @@ class HavShSync(models.AbstractModel):
             'application': rec.application,
             'state': rec.state.replace(" ", "_") if rec.state else '',
             'author': rec.author or '',
+            'license': rec.license or '',
             'category': rec.category_id.name or '',
             'version': getattr(rec, 'installed_version', '') or getattr(rec, 'latest_version', '') or '',
             'updated_at': rec.write_date.isoformat() if rec.write_date else '',
