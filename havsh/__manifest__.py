@@ -14,5 +14,6 @@
         'data/ir_cron.xml',
     ],
     'installable': True,
+    'post_init_hook': '_post_init_hook',
     'application': False,
 }
