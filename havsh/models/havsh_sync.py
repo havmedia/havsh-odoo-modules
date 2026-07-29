@@ -150,6 +150,47 @@ class HavShSync(models.AbstractModel):
             envelope = self._havsh__envelope(uuid, action, payload)
             self._havsh__post(url, envelope, token)
 
+    def _schedule_module_update(self, records, action):
+        """Send a module sync to hav.sh AFTER the current transaction commits.
+
+        The HTTP call must never run inside the transaction that writes
+        ``ir.module.module``. "Update Apps List" and module install/upgrade write
+        many module rows at once (each triggering the ``create``/``write`` override),
+        and posting synchronously blocks on network I/O while the transaction — and
+        its row locks on ``ir_module_module`` / ``ir_module_module_dependency`` — stays
+        open for the whole round-trip. Under Odoo's REPEATABLE READ isolation that
+        widens the window for "could not serialize access due to concurrent update"
+        aborts (and Odoo's built-in serialization retry can't win, because every retry
+        re-runs the same slow blocking POSTs), which crashes the operation for the user.
+
+        Payloads are built now (cheap in-transaction reads) and posted from a
+        ``cr.postcommit`` callback, so no network I/O happens until the transaction has
+        committed and released its locks.
+        """
+        token, uuid = self._havsh__ensure_auth()
+        if not token:
+            return
+
+        records = records.exists()
+        if not records:
+            return
+
+        url = self._havsh__webhook_url()
+        envelopes = [
+            self._havsh__envelope(
+                uuid,
+                action,
+                dict(self._havsh__record_payload(rec), action=action) if action else self._havsh__record_payload(rec),
+            )
+            for rec in records
+        ]
+
+        def _post_after_commit():
+            for envelope in envelopes:
+                self._havsh__post(url, envelope, token)
+
+        self.env.cr.postcommit.add(_post_after_commit)
+
     @api.model
     def _sync_all_to_havsh(self):
         token, uuid = self._havsh__ensure_auth()
