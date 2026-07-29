@@ -27,12 +27,12 @@ class IrModuleModule(models.Model):
             for vals in vals_list
         )
         if should_sync:
-            self.env['havsh.sync']._post_module_update(records, action='create-module')
+            self.env['havsh.sync']._schedule_module_update(records, action='create-module')
         return records
 
     def write(self, vals):
         res = super().write(vals)
         # Only sync if at least one relevant field is being updated
         if any(field in vals for field in self._HAVSH_SYNC_FIELDS):
-            self.env['havsh.sync']._post_module_update(self, action='update-module')
+            self.env['havsh.sync']._schedule_module_update(self, action='update-module')
         return res
