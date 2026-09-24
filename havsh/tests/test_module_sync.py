@@ -22,7 +22,7 @@ class TestModuleSyncDeferred(TransactionCase):
 
         with patch.object(HavShSync, '_havsh__ensure_auth', return_value=('tok', 'uid')), \
                 patch.object(HavShSync, '_havsh__post', side_effect=lambda *a, **k: calls.append(a)):
-            module.write({'latest_version': '19.0.0.0.99'})
+            module.write({'latest_version': '20.0.0.0.99'})
 
             # Nothing may hit the network while the transaction (and its locks) is open.
             self.assertEqual(
@@ -42,7 +42,7 @@ class TestModuleSyncDeferred(TransactionCase):
 
         with patch.object(HavShSync, '_havsh__ensure_auth', return_value=(None, None)), \
                 patch.object(HavShSync, '_havsh__post') as post:
-            module.write({'latest_version': '19.0.0.0.98'})
+            module.write({'latest_version': '20.0.0.0.98'})
             self.env.cr.postcommit.run()
             post.assert_not_called()
 

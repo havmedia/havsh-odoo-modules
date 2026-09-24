@@ -52,7 +52,7 @@ This repo contains custom odoo modules for the topic: Hav.sh.
 
 | Technical Name | Name | Summary | Version |
 | --- | --- | --- | --- |
-| havsh | HAV.sh Companion Module | Synchronize Data with hav.sh | 19.0.1.0.0 |
+| havsh | HAV.sh Companion Module | Synchronize Data with hav.sh | 20.0.1.0.0 |
 
 
 <!-- GETTING STARTED -->
