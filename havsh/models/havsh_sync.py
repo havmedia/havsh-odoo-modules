@@ -236,6 +236,9 @@ class HavShSync(models.AbstractModel):
                     rcfile = config.get("config")
                 except Exception:
                     rcfile = None
+            if not rcfile:
+                # Odoo 17.0 and 18.0 keep the path of the config file here only
+                rcfile = getattr(config, "rcfile", None)
             if rcfile:
                 cp = configparser.ConfigParser(interpolation=None)
                 cp.read([rcfile])
