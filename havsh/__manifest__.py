@@ -3,7 +3,7 @@
     'name': 'HAV.sh Companion Module',
     'version': '19.0.1.0.0',
     'summary': 'Synchronize Data with hav.sh',
-    'description': 'Keeps Odoo synchronized with the external management platform hav.sh using real-time webhooks and scheduled full syncs.',
+    'description': 'Keeps the module list of the external management platform hav.sh up to date: after a change the changed modules are sent together, and all of them once a day.',
     'category': 'Hidden',
     'author': 'HAV Media GmbH',
     'website': 'https://hav.media',
@@ -14,6 +14,6 @@
         'data/ir_cron.xml',
     ],
     'installable': True,
-    'post_init_hook': '_post_init_hook',
+    'uninstall_hook': '_uninstall_hook',
     'application': False,
 }
